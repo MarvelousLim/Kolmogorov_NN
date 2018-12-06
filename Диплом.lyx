@@ -1,0 +1,655 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language russian
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2cm
+\topmargin 2cm
+\rightmargin 2cm
+\bottommargin 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language french
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Part
+Обзор литературы
+\end_layout
+
+\begin_layout Section
+В.И.
+ Арнольд, О представлении функций нескольких переменных в виде суперпозиции
+ функций меньшего числа переменных
+\end_layout
+
+\begin_layout Standard
+На-на-на
+\end_layout
+
+\begin_layout Section
+
+\lang american
+Yann LeCun, Leon Bottou, e.c., Efficient BackProp
+\end_layout
+
+\begin_layout Standard
+В наличии: 
+\end_layout
+
+\begin_layout Enumerate
+Многослойная вперед-направленная (без циклов, связей 
+\begin_inset Quotes fld
+\end_inset
+
+назад
+\begin_inset Quotes frd
+\end_inset
+
+ и 
+\begin_inset Quotes fld
+\end_inset
+
+>1 вперед
+\begin_inset Quotes frd
+\end_inset
+
+) нейронная сеть (НС).
+ 
+\end_layout
+
+\begin_layout Enumerate
+Все градиентные методы.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Некая магическая (или нет) функция ошибки 
+\begin_inset Formula $E$
+\end_inset
+
+ (например, 
+\lang american
+MSE
+\lang russian
+)
+\end_layout
+
+\begin_layout Enumerate
+Статья на 44 страницы.
+\end_layout
+
+\begin_layout Subsection
+Что все это такое?
+\end_layout
+
+\begin_layout Subsubsection
+
+\lang american
+NN
+\lang russian
+ (НС)
+\end_layout
+
+\begin_layout Standard
+Теперь по порядку.
+ Определим что такое рассматриваемая нами 
+\lang american
+
+\begin_inset Quotes fld
+\end_inset
+
+classical
+\begin_inset Quotes frd
+\end_inset
+
+ multi-layer feed-forward neural network(NN)
+\lang russian
+.
+ В самом общем виде, это сложная функция 
+\begin_inset Formula $f(X,W)$
+\end_inset
+
+, где 
+\begin_inset Formula $X$
+\end_inset
+
+ - вектор признаков, а 
+\begin_inset Formula $W$
+\end_inset
+
+ - массив параметров, которые и настраиваются в процессе обучения.
+ Чуть более конкретно, 
+\begin_inset Formula $f(X,W)$
+\end_inset
+
+ это результат последовательного применения 
+\begin_inset Formula $N$
+\end_inset
+
+ таких модулей 
+\begin_inset Formula $F_{n}$
+\end_inset
+
+ (слоев), что: 
+\begin_inset Formula $X_{n}=F_{n}(X_{n-1},W_{n})$
+\end_inset
+
+, где 
+\begin_inset Formula $X_{0}=X$
+\end_inset
+
+, 
+\begin_inset Formula $W=\bigcup W_{n}$
+\end_inset
+
+, а 
+\begin_inset Formula $X_{N}=f(X,W)$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+
+\lang american
+Error Function
+\end_layout
+
+\begin_layout Standard
+Буквой 
+\begin_inset Formula $p$
+\end_inset
+
+ станем обозначать номер некого входного примера 
+\begin_inset Formula $X_{p}$
+\end_inset
+
+, для которого известен правильный ответ 
+\begin_inset Formula $D_{p}$
+\end_inset
+
+.
+ Тогда мера неправильности работы сети при конкретных 
+\begin_inset Formula $W$
+\end_inset
+
+ есть 
+\begin_inset Formula $E_{p}=E(D_{p},f(X_{p},W))$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Рассмотрим эту величину чуть более подробно на примере 
+\lang american
+MSE
+\lang russian
+.
+ Пусть, для простоты примера, истинная зависимость имеет вид 
+\begin_inset Formula $y=f(x)+\varepsilon$
+\end_inset
+
+, где 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+ - шум с нулевым средним и стандартным отклонением 
+\begin_inset Formula $\sigma$
+\end_inset
+
+.
+ Мы хотим приблизить 
+\begin_inset Formula $f$
+\end_inset
+
+ нашей функцией 
+\begin_inset Formula $\hat{f}=f(X,W)$
+\end_inset
+
+.
+ Тогда верным будем следующее:
+\begin_inset Formula 
+\[
+\left\langle (y-\hat{f})^{2}\right\rangle =Bias(\hat{f})^{2}+Var(\hat{f})+\sigma^{2}
+\]
+
+\end_inset
+
+где 
+\begin_inset Formula $Bias(\hat{f})=\left\langle \hat{f}-f\right\rangle $
+\end_inset
+
+ (смещение), 
+\begin_inset Formula $Var(\hat{f})=\left\langle \hat{f}^{2}\right\rangle -\left\langle \hat{f}\right\rangle ^{2}$
+\end_inset
+
+ (дисперсия).
+ Что это дает? Утверждается, что чем более сложна модель, тем больше точек
+ данных она захватывает и тем меньше будет смещение.
+ Однако сложность приводит модель к захвату большего числа точек, а потому
+ её дисперсия будет больше.
+ Утверждение это повесим в воздухе и пойдем дальше.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+
+\lang american
+Grad
+\end_layout
+
+\begin_layout Standard
+Окей, у нас есть НС, есть функция ошибок и есть куча примеров.
+ Предположим, мы как-то выбрали начальные значения 
+\begin_inset Formula $W_{0}$
+\end_inset
+
+.
+ Как нам их настраивать? Один из способов (а точнее, почти все они) - градиентны
+й спуск в какой-нибудь минимум функции ошибок.
+ Гарантировать, что попадем мы в нужный минимум почти нереально, но мы пока
+ это проигнорируем.
+ Итак, в векторном виде: 
+\begin_inset Formula 
+\[
+W_{t+1}=W_{t}-\eta\frac{\partial E^{t}}{\partial W}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+
+\lang american
+BackProp
+\end_layout
+
+\begin_layout Standard
+В силу того, что, вообще говоря, 
+\begin_inset Formula $E$
+\end_inset
+
+ это сложная функция 
+\begin_inset Formula $W$
+\end_inset
+
+, взглянем поближе, как ее можно обсчитать.
+ Как мы помним, наша сеть - набор слоев.
+ Применим к нему итерационный подход: пусть мы как-то вычислили 
+\begin_inset Formula $\frac{\partial E^{p}}{\partial X_{n}}$
+\end_inset
+
+:
+\begin_inset Formula 
+\begin{align*}
+\frac{\partial E^{p}}{\partial W_{n}} & =\frac{\partial E^{p}}{\partial X_{n}}\frac{\partial F_{n-1}}{\partial W_{n}}\\
+\frac{\partial E^{p}}{\partial X_{n-1}} & =\frac{\partial E^{p}}{\partial X_{n}}\frac{\partial F_{n-1}}{\partial X_{n-1}}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Таким образом, зная соответствующие якобианы, мы можем применять эти уравнения
+ последовательно от последних слоев к первым.
+ Такой путь и называется 
+\lang american
+Back Propogation.
+
+\lang russian
+ Традиционно:
+\begin_inset Formula 
+\begin{align*}
+Y_{n} & =W_{n}X_{n-1}\\
+X_{n} & =F(Y_{n})
+\end{align*}
+
+\end_inset
+
+где 
+\begin_inset Formula $W_{n}$
+\end_inset
+
+ - просто матрица параметров соотв.
+ размерности, 
+\begin_inset Formula $Y_{n}$
+\end_inset
+
+ - промежуточная переменная, а 
+\begin_inset Formula $F$
+\end_inset
+
+ - вектор-функция одинаковых сигмоид или еще чего.
+ Тогда: 
+\begin_inset Formula 
+\begin{align*}
+\frac{\partial E^{p}}{\partial Y_{n}} & =F^{\prime}(Y_{n})\frac{\partial E^{p}}{\partial X_{n}}\\
+\frac{\partial E^{p}}{\partial W_{n}} & =X_{n-1}\frac{\partial E^{p}}{\partial Y_{n}}\\
+\frac{\partial E^{p}}{\partial X_{n-1}} & =W_{n}^{T}\frac{\partial E^{p}}{\partial Y_{n}}
+\end{align*}
+
+\end_inset
+
+ Весь этот перегруженный набор уравнений, собственно и позволяет слой за
+ слоем определить градиент функции ошибки на конкретном шаге обучения.
+ 
+\end_layout
+
+\begin_layout Subsection
+Детали
+\end_layout
+
+\begin_layout Standard
+Теперь мы, в теории, можем построить простейшую НС.
+ С этого момента мы вдаемся в делали, тонкости и уточнения.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+\begin_inset Formula $E^{p}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Вникнем в букву 
+\begin_inset Formula $p$
+\end_inset
+
+, что в верхнем индексе.
+ Она, как уже было сказано, означает некий конкретный пример или набор примеров,
+ на которые мы хотим натаскать нашу НС.
+ Вообще говоря, казалось бы, неплохо взять весь набор данных 
+\lang american
+(dataset)
+\lang russian
+ и вычислять усредненный по всем примерам градиент.
+ Это, собственно, и делают в так называемых 
+\lang american
+
+\begin_inset Quotes fld
+\end_inset
+
+batch
+\begin_inset Quotes frd
+\end_inset
+
+
+\lang russian
+ (пакетных?) методах.
+ Такой подход имеет свои плюсы:
+\end_layout
+
+\begin_layout Enumerate
+Он понятен и теоретически изучен
+\end_layout
+
+\begin_layout Enumerate
+Есть некоторое количество оптимизационных техник, предназначенных именно
+ для него
+\end_layout
+
+\begin_layout Standard
+Тем не менее, есть и другой путь: случайное обучение 
+\lang american
+(stochastic learning),
+\lang russian
+ когда на каждом шаге из наборы выбирается один случайный пример и градиент
+ высчитывается на нем.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Обычно гораздо быстрее пакетного метода.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Часто дает лучшие результаты
+\end_layout
+
+\begin_layout Enumerate
+Можно попытаться отследить изменения, вносимые каждым примером.
+ 
+\end_layout
+
+\begin_layout Standard
+Как же так? Кроме рукомахательных рассуждений, самым важным здесь является
+ то, что такой подход вносит в систему шум.
+ Если бы мы использовали пакетный метод, мы бы обязательно упали именно
+ в 
+\begin_inset Quotes fld
+\end_inset
+
+ближайший минимум
+\begin_inset Quotes frd
+\end_inset
+
+ (если вообще бы упали), тогда как в случайном мы можем перепрыгнуть в другой,
+ потенциально более глубокий минимум.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+\begin_inset Formula $\eta$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Обработка входных данных
+\end_layout
+
+\begin_layout Subsubsection
+О выборе 
+\begin_inset Formula $p$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+НС получает наибольший пинок, если мы берем незнакомый ей доселе пример.
+ Поэтому иногда имеет смысл пытаться скармливать ей примеры из разных классов,
+ вторгаясь в равномерно случайный процесс выбора.
+ Критерием 
+\begin_inset Quotes fld
+\end_inset
+
+незнакомости
+\begin_inset Quotes frd
+\end_inset
+
+ может служить, собственно, функция ошибки.
+ С другой стороны, так можно нарваться на 
+\begin_inset Quotes fld
+\end_inset
+
+выброс
+\begin_inset Quotes frd
+\end_inset
+
+, на котором такой подход угробит вообще все.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+\begin_inset Formula $\left\langle X\right\rangle =0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Пусть все 
+\begin_inset Formula $X_{i}>0$
+\end_inset
+
+.
+ На каждом шагу веса обновляются так, что 
+\begin_inset Formula $\Delta W\propto\delta X$
+\end_inset
+
+, где 
+\begin_inset Formula $\delta$
+\end_inset
+
+ - ошибка на узле (скаляр).
+ Но тогда веса могут меняться только все вместе в одну сторону.
+ Это плохо (и чуть-чуть в воздухе).
+\end_layout
+
+\begin_layout Subsubsection
+\begin_inset Formula $C_{i}=\frac{1}{P}\sum_{p=1}^{P}(x_{i}^{p})^{2}\sim1$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Следите за руками, а то сдует.
+ Утверждается, что неплохо бы, чтобы после вычитания среднего мы еще и свели
+ разброс к некому согласованному с 
+\begin_inset Formula $F$
+\end_inset
+
+ значению (обычно 
+\begin_inset Formula $\sim1$
+\end_inset
+
+).
+ Почему?
+\end_layout
+
+\begin_layout Standard
+Тем не менее, если мы знаем, что некоторые признаки менее важны, мы можем
+ руками зарезать их разброс.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+
+\lang american
+KL-transform
+\end_layout
+
+\begin_layout Standard
+Можно ли вырезать из входных данных корреляции? Линейные, как утверждается,
+ можно вырезать KL-преобразованием.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+О сигмоидах
+\end_layout
+
+\begin_layout Standard
+Точно так же, как и входные данные, наши функции активации должны быть (неплохо
+ бы) нечетными.
+ Далее, если бы мы взяли за 
+\begin_inset Formula $F(X)=X$
+\end_inset
+
+, то на выходе получили бы просто линейную комбинацию входных данных.
+ Сила и неадекватность НС заключается в том, что 
+\begin_inset Formula $F$
+\end_inset
+
+ не берут линейными.
+ Чаще всего берут их монотонными с конечными пределами на 
+\begin_inset Formula $\pm\infty$
+\end_inset
+
+ как то 
+\begin_inset Formula $\tanh$
+\end_inset
+
+.
+ Собственно, здесь и раскрывается смысл нормировки 
+\begin_inset Formula $C_{i}$
+\end_inset
+
+: если они слишком маленькие, то мы будем жить на линейном участке, если
+ же они слишком большие, то жить мы станем на плоских участках.
+ Что то, что это плохо.
+ 
+\end_layout
+
+\begin_layout Subsection
+Сходимость (теория) 
+\end_layout
+
+\end_body
+\end_document
