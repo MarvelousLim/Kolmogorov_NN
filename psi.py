@@ -1,8 +1,7 @@
 def float_to_dec_list(x):
-    """for
-    - x - single float
-    return:
-    - list of digits of base 10"""
+    """transter from float x to list of digits of base 10
+    :param x: single float
+    :return list of digits of base 10"""
     if x < 0.0 or x >= 1.0:
         raise ValueError(x)
     if x == 0.0:
@@ -15,10 +14,9 @@ def float_to_dec_list(x):
 
 def gammapp(x, base):
     """++ for list of digits of base gamma
-    - list of digits of base gamma
-    - gamma, base of calculations
-    return:
-    - list of digits of base gamma"""
+    :param list of digits of base gamma
+    :param gamma: base of calculations
+    :return list of digits of base gamma"""
     x[-1] += 1
     position = len(x) - 1
     while x[position] >= base:
@@ -32,10 +30,9 @@ def gammapp(x, base):
 
 def gammamm(x, base):
     """-- for list of digits of base gamma
-    - list of digits of base gamma
-    - gamma, base of calculations
-    return:
-    - list of digits of base gamma"""
+    :param list of digits of base gamma
+    :param gamma: base of calculations
+    :return list of digits of base gamma"""
     x[-1] -= 1
     position = len(x) - 1
     if x[-1] == 0:
@@ -50,11 +47,10 @@ def gammamm(x, base):
     
 def mul(x, num, base):
     """multiply for list of digits of base gamma
-    - list of digits of base gamma
-    - num, number to multiply on
-    - gamma, base of calculations
-    return:
-    - list of digits of base gamma"""
+    :param: list of digits of base gamma
+    :param num: number to multiply on
+    :param gamma: base of calculations
+    :return list of digits of base gamma"""
     add = 0
     #x - list, num - int, base - int
     for i in range(1, len(x))[::-1]:
@@ -75,11 +71,10 @@ def mul(x, num, base):
     
 def division(x, num, base):
     """division for list of digits of base gamma
-    - list of digits of base gamma
-    - num, number to divide on
-    - gamma, base of calculations
-    return:
-    - list of digits of base gamma"""
+    :param: list of digits of base gamma
+    :param num: number to multiply on
+    :param gamma: base of calculations
+    :return list of digits of base gamma"""
     add = 0
     #x - list, num - int, base - int
     for i in range(limit):
@@ -94,9 +89,8 @@ def division(x, num, base):
 
 def dec_list_to_gamma(x):
     """transfer x to base gamma
-    - list of digits of base 10
-    return:
-    - list of digits of base gamma"""
+    :param list of digits of base 10
+    :return list of digits of base gamma"""
     result = []
     while len(result) < limit and len(x) > 1:
         x = mul(x, gamma, 10)
@@ -106,9 +100,8 @@ def dec_list_to_gamma(x):
 
 def gamma_to_float(x):
     """transfer list of digits of base gamma to float
-    - list of digits of base 10
-    return:
-    - float"""
+    :param list of digits of base 10
+    :return float value of x"""
     mul = 1
     for i in range(len(x)):
         x[i] *= mul
@@ -132,12 +125,11 @@ def pre_psi(x):
     
 def psi(x, in1, in2, lim=15):
     """ wrapper over pre_psi
-    - x - single float [0, 1]
-    - in1 = gamma, base of calculations
-    - in2 = n, dimensionality of features
-    - lim - number of digits in calculations
-    return:
-    - float psi value"""
+    :param x: single float [0, 1]
+    :param in1 = gamma: base of calculations
+    :param in2 = n: dimensionality of features
+    :param lim: number of digits in calculations
+    :return float psi value"""
     global gamma
     global n
     global limit
@@ -149,12 +141,11 @@ def psi(x, in1, in2, lim=15):
 #####################
 
 def lbd(p, gamma, in2):
-    """returns lambda_p for
-    - gamma, base of calculations
-    - n, dimensionality of features
-    return:
-    - float lambda_p
-    sum of all (2n+1) lambda_p gives max value of second layer features"""
+    """returns lambda_p for sum of all (2n+1) lambda_p gives max value of second layer features
+    :param gamma: base of calculations
+    :params n: dimensionality of features
+    :return float lambda_p
+    """
     global n
     n = in2
     if p == 1:
@@ -170,12 +161,11 @@ def lbd(p, gamma, in2):
 
 def inner_function(x, in1, in2, lim=15):
     """first layer function
-    - x - array of n floats, features of single row
-    - in1 = gamma, base of calculations
-    - in2 = n, dimensionality of features
-    - lim - number of digits in calculations
-    return:
-    - array of size (2n+1)"""
+    :param x - array of n floats, features of single row
+    :param in1 = gamma, base of calculations
+    :param in2 = n, dimensionality of features
+    :param lim - number of digits in calculations
+    :return array of size (2n+1)"""
 
     global gamma
     global n
