@@ -5,6 +5,9 @@ n = 3
 limit = 15
 
 def block_grid(size):
+    """auxiliary function for calculating CUDA grid constants
+    :param size, int of number of threads required
+    :returns tuple (block_size, grid_size)"""
     block_size = 1024
     grid_size = size // block_size
     if (size % block_size != 0):
@@ -13,6 +16,12 @@ def block_grid(size):
 
 class second_layer:
     def __init__(self, N, n):
+        """
+        realization of second layer for GPU
+        before start, please, initialize gamma, n and limit
+        :param N: fraction number for piecewise constant function
+        :param n: dimensionality of features
+        """
         mod = SourceModule("""
         
             #define FULL_MASK 0xffffffff
@@ -115,7 +124,11 @@ int n, int N, float up_max, float *gradd, float *Q)
         self.m = np.zeros_like(self.theta)
         self.v = np.zeros_like(self.theta)
 
-    def predict(self, X):        
+    def predict(self, X):
+        """
+        :param np.array X of size (size, 2n+1)
+        :return np.array Y of size( size, 1) of predictions of model
+        """
         Y = np.zeros(X.shape[0], dtype=np.float32)
         X = X.flatten().astype(np.float32)
         #donwload parameters
@@ -137,6 +150,14 @@ int n, int N, float up_max, float *gradd, float *Q)
         theta_gpu.free()
         return Y
     def fit(self, X, Y, alpha=0.1, n_steps=10):
+        """
+        learning with adam
+        :param X: np.array of size (size, 2n+1) - features
+        :param Y: np.array of size (size, 1) of target values
+        :param alpha: float, learning rate
+        :param n_steps: int, number of steps
+        """
+
         #donwload parameters
         theta_gpu = cuda.mem_alloc(self.theta.nbytes)
         cuda.memcpy_htod(theta_gpu, self.theta)
