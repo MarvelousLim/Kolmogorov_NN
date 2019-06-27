@@ -1,22 +1,17 @@
-def float_to_dec_list(x):
-    """transter from float x to list of digits of base 10
-    :param x: single float
-    :return list of digits of base 10"""
+def float_to_dec_list(x, gamma, n, limit):
     if x < 0.0 or x >= 1.0:
         raise ValueError(x)
-    if x == 0.0:
+    if x <= pow(10, -limit):
         return [0]
+    if x >= 1 - pow(10, -limit):
+        return [1]
     s = ('%.' + str(limit) + 'f') % x
     result = list(map(int, s[2:]))
-    while result[-1] == 0:
+    while len(result) > 0 and result[-1] == 0:
         result = result[:-1]
     return [0] + result
 
 def gammapp(x, base):
-    """++ for list of digits of base gamma
-    :param list of digits of base gamma
-    :param gamma: base of calculations
-    :return list of digits of base gamma"""
     x[-1] += 1
     position = len(x) - 1
     while x[position] >= base:
@@ -29,10 +24,6 @@ def gammapp(x, base):
     return x
 
 def gammamm(x, base):
-    """-- for list of digits of base gamma
-    :param list of digits of base gamma
-    :param gamma: base of calculations
-    :return list of digits of base gamma"""
     x[-1] -= 1
     position = len(x) - 1
     if x[-1] == 0:
@@ -46,11 +37,6 @@ def gammamm(x, base):
     return x
     
 def mul(x, num, base):
-    """multiply for list of digits of base gamma
-    :param: list of digits of base gamma
-    :param num: number to multiply on
-    :param gamma: base of calculations
-    :return list of digits of base gamma"""
     add = 0
     #x - list, num - int, base - int
     for i in range(1, len(x))[::-1]:
@@ -69,28 +55,9 @@ def mul(x, num, base):
         x[0] += add
     return x
     
-def division(x, num, base):
-    """division for list of digits of base gamma
-    :param: list of digits of base gamma
-    :param num: number to multiply on
-    :param gamma: base of calculations
-    :return list of digits of base gamma"""
-    add = 0
-    #x - list, num - int, base - int
-    for i in range(limit):
-        if add > 0 and i >= len(x):
-            x.append(0)
-        elif add == 0 and i >= len(x):
-            return x
-        x[i] += add * base
-        add = x[i] % num
-        x[i] = x[i] // num        
-    return x
-
-def dec_list_to_gamma(x):
-    """transfer x to base gamma
-    :param list of digits of base 10
-    :return list of digits of base gamma"""
+def dec_list_to_gamma(x, gamma, n, limit):
+    if x == [1]:
+        return [1]
     result = []
     while len(result) < limit and len(x) > 1:
         x = mul(x, gamma, 10)
@@ -98,56 +65,38 @@ def dec_list_to_gamma(x):
         x[0] = 0
     return [0] + result
 
-def gamma_to_float(x):
-    """transfer list of digits of base gamma to float
-    :param list of digits of base 10
-    :return float value of x"""
+def gamma_to_float(x, gamma):
     mul = 1
     for i in range(len(x)):
         x[i] *= mul
         mul /= gamma
     return sum(x)
 
-def beta(r):
+def beta(r, n):
     return (pow(n, r) - 1) / (n - 1)
-def pre_psi(x):
-    """a recursion function, calculating psi function value
-    in the end returns float - at midtime returns list of digits of base gamma"""
+
+def pre_psi(x, gamma, n, limit):
+    """in the end returns float - at midtime returns gamma-list"""
+    if x == [1]:
+        return 1.0
     k = len(x)
     if k <= 2:
-        return gamma_to_float(x)
+        return gamma_to_float(x, gamma)
     elif k > 2 and x[-1] < gamma - 1:
-        return pre_psi(x.copy()[:-1]) + x[-1] * pow(gamma, -beta(k - 1))
+        return pre_psi(x.copy()[:-1], gamma, n, limit) + x[-1] * pow(gamma, -beta(k - 1, n))
     elif k > 2 and x[-1] == gamma - 1:
-        return 0.5 * (pre_psi(gammamm(x.copy(), gamma)) + pre_psi(gammapp(x.copy(), gamma)))
+        return 0.5 * (pre_psi(gammamm(x.copy(), gamma), gamma, n, limit) + pre_psi(gammapp(x.copy(), gamma), gamma, n, limit))
 
 #####################
     
-def psi(x, in1, in2, lim=15):
-    """ wrapper over pre_psi
-    :param x: single float [0, 1]
-    :param in1 = gamma: base of calculations
-    :param in2 = n: dimensionality of features
-    :param lim: number of digits in calculations
-    :return float psi value"""
-    global gamma
-    global n
-    global limit
-    gamma = in1
-    n = in2
-    limit = lim
-    return pre_psi(dec_list_to_gamma(float_to_dec_list(x)))
+def psi(x, gamma, n, limit=15):
+    """x - float [0, 1]"""
+    return pre_psi(dec_list_to_gamma(float_to_dec_list(x, gamma, n, limit), gamma, n, limit), gamma, n, limit)
 
 #####################
 
-def lbd(p, gamma, in2):
-    """returns lambda_p for sum of all (2n+1) lambda_p gives max value of second layer features
-    :param gamma: base of calculations
-    :params n: dimensionality of features
-    :return float lambda_p
-    """
-    global n
-    n = in2
+def lbd(p, gamma, n):
+    """calculates lambda"""
     if p == 1:
         return 1
     r = 1
@@ -159,21 +108,8 @@ def lbd(p, gamma, in2):
         r += 1
     return lbd_new
 
-def inner_function(x, in1, in2, lim=15):
-    """first layer function
-    :param x - array of n floats, features of single row
-    :param in1 = gamma, base of calculations
-    :param in2 = n, dimensionality of features
-    :param lim - number of digits in calculations
-    :return array of size (2n+1)"""
-
-    global gamma
-    global n
-    global limit
-    gamma = in1
-    n = in2
-    limit = lim
-    
+def inner_function(x, gamma, n, limit=15):
+    """x - array of n floats, in1=gamma, in2=n"""    
     a = (1 / gamma) / (gamma - 1)
     
     lbd_arr = [lbd(p + 1, gamma, n) for p in range(n)]
